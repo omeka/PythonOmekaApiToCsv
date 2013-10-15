@@ -28,8 +28,7 @@ like this:
 
     ---
     Title: Sample item added with omekadd
-    Source: |
-        <a href="http://hipsteripsum.me">Hipster Ipsum</a>
+    Source: Hipster Ipsum
     Publisher: Quinoa McDaniel
     Date: ca. 2013
     Rights: Open
@@ -37,15 +36,13 @@ like this:
     Language: Hipsterese
     Type: Text
     Description: |
-        markdown> This item was added to this site using the [Omeka API][]
+        markdown> This item was added to this site using the Omeka API
         and a script called [`omekadd`](https://github.com/wcaleb/omekadd),
         which transforms YAML documents into JSON strings suitable for using
         with the API. As this Description demonstrates, the script can also
         convert [Markdown](http://daringfireball.net/projects/markdown/) into
         HTML for easy formatting. The other text in this item was taken from
         Hipster Ipsum, a random generator of Hipsterese.
-
-        [Omeka API]: https://omeka.readthedocs.org/en/latest/Reference/api/index.html
     Text: |
         <p>Single-origin <em>coffee</em> drinking vinegar Bushwick, Echo Park 90's
         Helvetica McSweeney's. Church-key American Apparel selvage sustainable.
@@ -108,7 +105,7 @@ the command-line arguments:
       -p, --public          Make item public
       -f, --featured        Make item featured
       -c COLLECTION, --collection COLLECTION
-                            Add item to collection n
+                            Add item to collection COLLECTION
       -t TYPE, --type TYPE  Specify item type using Omeka id; default is 1, for
                             "Document"
 
@@ -124,6 +121,10 @@ Then, in your YAML file, prefix any string that you would like to be converted
 from Markdown to HTML with a special prefix. By default, as shown in the
 `sample.yaml` file, this is set to the string `markdown>`. However, you can
 change the prefix mark on the commandline by using the `--mdmark` option.
+
+*Note:* If you process a string with Markdown, the output HTML will be wrapped
+in `<p>` and `</p>` tags. That's a feature of Markdown, but it may clutter your
+item metadata with unwanted tags.
 
 Issues
 ------
