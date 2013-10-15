@@ -120,11 +120,10 @@ your YAML. To do this, first install the module:
 
     pip install markdown
 
-Then, in your YAML file, prefix any string that you would like to be
-converted from Markdown to HTML with a special prefix. By default, as
-shown in the `sample.yaml` file, this is set to the string
-`markdown>'. However, you can change the prefix mark on the commandline by using the`--mdmark\`
-option.
+Then, in your YAML file, prefix any string that you would like to be converted
+from Markdown to HTML with a special prefix. By default, as shown in the
+`sample.yaml` file, this is set to the string `markdown>`. However, you can
+change the prefix mark on the commandline by using the `--mdmark` option.
 
 Issues
 ------
