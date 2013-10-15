@@ -1,57 +1,28 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+endpoint = "http://localhost/omeka/api"
+apikey = "XXXXXXXXXX"
+
 from omekaclient import OmekaClient
+from sys import stdin
+import argparse
 import yaml
 import json
+try:
+    import markdown
+except ImportError:
+    print "Error: Python module for Markdown missing"
 
-endpoint = "http://localhost/omeka/api"
-apikey = "XXXXXXXXX"
-
-# Here is an example of the kind of YAML user could create
-# Filler text courtesy of http://hipsteripsum.me
-ymlinput = """
----
-Title: Another hipster item
-Source: |
-    <a href="http://hipsteripsum.me">Hipster Ipsum</a>
-Publisher: Quinoa McDaniel
-Date: ca. 2013
-Rights: Open
-Format: Plain text, of course
-Language: Hipsterese
-Type: Text
-Description: |
-    Yr cardigan viral, flannel food truck brunch mumblecore whatever. Selvage you
-    probably haven't heard of them quinoa, meh mumblecore literally 90's 
-    banh mi. Brunch flannel mixtape wayfarers meggings art party. Ethical ugh
-    scenester viral 90's. Cornhole quinoa small batch, pop-up lomo mixtape 
-    rights next level leggings Brooklyn stumptown cray VHS fanny pack. Neutra
-    Carles +1 Cosby sweater, tousled banjo kale chips freegan single-origin 
-    American Apparel pork belly Pinterest Banksy mlkshk synth. Pinterest
-    fingerstache sustainable, ethical actually keytar next level ethnic hoodie
-    post-ironic Shoreditch farm-to-table Thundercats.
-Text: |
-    <p>Single-origin <em>coffee</em> drinking vinegar Bushwick, Echo Park 90's
-    Helvetica McSweeney's. Church-key American Apparel selvage sustainable.
-    Sustainable mixtape cornhole direct trade church-key Wes Anderson. 8-bit
-    salvia gentrify small batch shabby chic, single-origin coffee occupy
-    messenger bag Helvetica ennui forage wayfarers. Jean shorts 8-bit bitters,
-    sustainable retro VHS kogi Tumblr actually photo booth twee Terry
-    Richardson squid cred fap. Polaroid Shoreditch keytar, Blue Bottle
-    skateboard bitters twee letterpress VHS pour-over Schlitz master cleanse
-    food truck. Wolf pug freegan Tumblr pork belly locavore, Carles distillery
-    <strong>stumptown</strong> PBR 8-bit.</p>
-
-    <p>Irony pug Portland occupy, next level fap tousled. Post-ironic raw denim
-    organic leggings, deep v paleo Shoreditch twee selvage photo booth scenester
-    90's wayfarers keffiyeh readymade. Keffiyeh McSweeney's keytar butcher 
-    beard. Cray aesthetic PBR, tattooed photo booth chambray fanny pack banh mi.
-    Craft beer Terry Richardson lo-fi, Echo Park master cleanse twee roof party
-    Blue Bottle put a bird on it vinyl tofu mixtape fap fixie. Ennui 
-    coffee gluten-free, Williamsburg Brooklyn master cleanse locavore Vice swag
-    slow-carb disrupt lo-fi. Twee ethnic synth biodiesel.</p>
-"""
+# Define and parse command-line arguments
+parser = argparse.ArgumentParser()
+parser.add_argument('inputfile', type=file, nargs="?", default=stdin, help='Name of input YAML file (optional)')
+parser.add_argument('-p', '--public', action='store_true', help='Make item public')
+parser.add_argument('-f', '--featured', action='store_true', help='Make item featured')
+parser.add_argument('-c', '--collection', type=int, default=None, help='Add item to collection n')
+parser.add_argument('-t', '--type', type=int, default=1, help='Specify item type using Omeka id; default is 1, for "Document"')
+parser.add_argument('-m', '--mdmark', default="markdown>", help='Change string prefix that triggers markdown conversion; default is "markdown>"')
+args = vars(parser.parse_args())
 
 # A dictionary of all the element ids in the Omeka database
 # TODO: Figure out how to generate this dict using Omeka API elements resource
@@ -62,19 +33,24 @@ d = {}
 for key, val in elements.items():
    d[val] = key
 
-# Settings that will apply to the item as a whole
-# TODO: Make these optional user arguments for the script 
-jsonobj = {"collection": {"id": 1}, "item_type":{"id":1}, "featured": False,"public": True}
+# Get YAML from input file
+ymlinput = args['inputfile'].read()
+
+# Set general item settings using command line arguments or defaults
+# Defaults are to make items private, not featured, no collection documents
+jsonobj = {"collection": {"id": args["collection"]}, "item_type": {"id": args["type"]}, "featured": args["featured"], "public": args["public"]}
 
 # This is where the input YAML is converted into json and added to jsonobj
 data = yaml.load(ymlinput)
 element_texts = []
 for key in data:
     element_text = {"html": True, "text": "none", "element_set": {"id": 0}}
-    element = {}
-    element["id"] = d[key]
+    element = {"id": d[key]}
     element_text["element"] = element
-    element_text["text"] = data[key]
+    if data[key].startswith(args["mdmark"]):
+       element_text["text"] = markdown.markdown(data[key][len(args["mdmark"]):])
+    else:
+       element_text["text"] = data[key]
     element_texts.append(element_text)
 jsonobj["element_texts"] = element_texts
 
