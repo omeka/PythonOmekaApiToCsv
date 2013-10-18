@@ -6,18 +6,6 @@ documents, using the Omeka API and Python
 
 Caleb McDaniel, <http://wcm1.web.rice.edu>
 
-Installation
-------------
-
-Clone this repo somewhere in your `$PATH`:
-
-	git clone https://github.com/wcaleb/omekadd.git
-
-The `omekadd.py` script imports the `OmekaClient` class from `omekaclient.py`,
-which is included in the repo. The development repo for the Omeka Client is
-maintained by [Jim Safley](https://github.com/jimsafley/omeka-client-py), who
-wrote the original client.
-
 Description
 -----------
 
@@ -69,11 +57,35 @@ The script turns the YAML document into the JSON string and posts it to
 your Omeka database using the API endpoint specified at the top of the
 script.
 
+Installation
+------------
+
+Make sure you have downloaded and installed Omeka 2.1 so you can use the API features.
+
+Clone this repo:
+
+	git clone https://github.com/wcaleb/omekadd.git
+
+The `omekadd.py` script imports the `OmekaClient` class from `omekaclient.py`,
+which is included in the repo. The development repo for the Omeka Client is
+maintained by [Jim Safley](https://github.com/jimsafley/omeka-client-py), who
+wrote the original client.
+
+Edit the first two lines of `omekadd.py` so that they contain your API
+endpoint and your API key. See the [Omeka
+documentation](https://omeka.readthedocs.org/en/latest/Reference/api/for_beginners.html)
+for help.
+
+To test, make sure that you've changed the permissions on `omekadd.py` to make
+it executable, and then try posting the `sample.yml` to your database:
+
+	cd omekadd
+	./omekadd.py sample.yaml
+
+Read on to discover more features, like uploading files to attach to the item!
+
 Usage
 -----
-
-First, edit the script replacing the strings for `apikey` and `endpoint`
-with your API key and API endpoint.
 
 In a text editor, type up your new item as a [YAML
 document](http://en.wikipedia.org/wiki/YAML). **The YAML document must
@@ -81,7 +93,7 @@ be well-formed.** You can validate your YAML
 [here](http://yamllint.com).
 
 The keys in your YAML (the words to the left of the colons) should
-correspond to the item elements in the Omeka database. These are the
+correspond to the item element texts in the Omeka database. These are the
 things that you typically see when you fill out the webform in Omeka,
 like the names of the Dublin Core fields or the Item Type Metadata
 fields.
@@ -93,7 +105,7 @@ For example, [this item](http://wcaleb.rice.edu/omeka/items/show/94) in
 my Omeka database was added using the `sample.yaml` file in this
 repository and this command:
 
-    omekadd.py sample.yaml
+    ./omekadd.py sample.yaml
 
 Alternatively, you can pipe your YAML to the script as `stdin` instead.
 
