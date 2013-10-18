@@ -47,10 +47,11 @@ for key in data:
     element_text = {"html": True, "text": "none", "element_set": {"id": 0}}
     element = {"id": d[key]}
     element_text["element"] = element
-    if data[key].startswith(args["mdmark"]):
-       element_text["text"] = markdown.markdown(data[key][len(args["mdmark"]):])
+    text = str(data[key])
+    if text.startswith(args["mdmark"]):
+       element_text["text"] = markdown.markdown(text[len(args["mdmark"]):])
     else:
-       element_text["text"] = data[key]
+       element_text["text"] = text
     element_texts.append(element_text)
 jsonobj["element_texts"] = element_texts
 
