@@ -1,12 +1,22 @@
 omekadd
 =======
 
-A Python script for adding new items to Omeka using simple YAML
-documents, using the Omeka API and the Python client
-`omeka-client-py` by [Jim Safley](https://github.com/jimsafley/omeka-client-py)
-(included in this repo)
+A script for adding new items to Omeka from the command line using simple YAML
+documents, using the Omeka API and Python
 
 Caleb McDaniel, <http://wcm1.web.rice.edu>
+
+Installation
+------------
+
+Clone this repo somewhere in your `$PATH`:
+
+	git clone https://github.com/wcaleb/omekadd.git
+
+The `omekadd.py` script imports the `OmekaClient` class from `omekaclient.py`,
+which is included in the repo. The development repo for the Omeka Client is
+maintained by [Jim Safley](https://github.com/jimsafley/omeka-client-py), who
+wrote the original client.
 
 Description
 -----------
@@ -126,11 +136,20 @@ change the prefix mark on the commandline by using the `--mdmark` option.
 in `<p>` and `</p>` tags. That's a feature of Markdown, but it may clutter your
 item metadata with unwanted tags.
 
+File Uploading
+--------------
+
+You can also upload a file to attach to your new item using this script.
+Just use the argument `-u, --upload` at the command line, followed by the
+properly escaped name of the file you want to upload. After creating your new
+Omeka item, the script will get the new item's ID and then upload the new file,
+associating it with the new item.
+
 Issues
 ------
 
-Right now this is just a barebones proof-of-concept script. Use at your
-own risk. Please help test it and don't be shy about reporting issues or
-forking and improving it. I've mainly made the script to help in my
-workflow, so I'm sure there are more pythonic ways to do this, and I'd
-be grateful for tips.
+Right now this is just a barebones proof-of-concept script, so I'm certain
+there are bugs to be worked out. Please help test it and don't be shy about
+reporting issues or forking and improving it. I've mainly made the script to
+help in my workflow, so I'm sure there are more pythonic ways to do this, and
+I'd be grateful for tips.

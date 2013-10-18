@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 endpoint = "http://localhost/omeka/api"
-apikey = "XXXXXXXXXX"
+apikey = "XXXXXXXXXXXXX"
 
 from omekaclient import OmekaClient
 from sys import stdin
@@ -21,6 +21,7 @@ parser.add_argument('-p', '--public', action='store_true', help='Make item publi
 parser.add_argument('-f', '--featured', action='store_true', help='Make item featured')
 parser.add_argument('-c', '--collection', type=int, default=None, help='Add item to collection n')
 parser.add_argument('-t', '--type', type=int, default=1, help='Specify item type using Omeka id; default is 1, for "Document"')
+parser.add_argument('-u', '--upload', default=None, help='Name of file to upload and attach to item')
 parser.add_argument('-m', '--mdmark', default="markdown>", help='Change string prefix that triggers markdown conversion; default is "markdown>"')
 args = vars(parser.parse_args())
 
@@ -34,14 +35,14 @@ for key, val in elements.items():
    d[val] = key
 
 # Get YAML from input file
-ymlinput = args['inputfile'].read()
+yamlinput = args['inputfile'].read()
 
 # Set general item settings using command line arguments or defaults
 # Defaults are to make items private, not featured, no collection documents
 jsonobj = {"collection": {"id": args["collection"]}, "item_type": {"id": args["type"]}, "featured": args["featured"], "public": args["public"]}
 
 # This is where the input YAML is converted into json and added to jsonobj
-data = yaml.load(ymlinput)
+data = yaml.load(yamlinput)
 element_texts = []
 for key in data:
     element_text = {"html": True, "text": "none", "element_set": {"id": 0}}
@@ -55,6 +56,17 @@ for key in data:
     element_texts.append(element_text)
 jsonobj["element_texts"] = element_texts
 
-# Dump json object into a string and post
+# Dump json object into a string and post, printing API response
 jsonstr = json.dumps(jsonobj)
-OmekaClient(endpoint, apikey).post("items", jsonstr) 
+response, content = OmekaClient(endpoint, apikey).post("items", jsonstr) 
+location = response["location"]
+print response.reason, location
+
+# Optionally, upload and attach file to new item
+if args["upload"] is not None:
+    print "Uploading file ..."
+    uploadjson = {"item": {"id": int(location.split("/")[-1])}}
+    uploadmeta = json.dumps(uploadjson)
+    uploadfile = open(args["upload"], "r").read()
+    response, content = OmekaClient(endpoint, apikey).post_file(uploadmeta, args["upload"], uploadfile) 
+    print response.reason, response["location"]
