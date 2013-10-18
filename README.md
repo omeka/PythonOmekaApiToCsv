@@ -2,8 +2,8 @@ omekadd
 =======
 
 A Python script for adding new items to Omeka using simple YAML
-documents, using the Omeka API and Jim Safley's
-[`omeka-client-py`](https://github.com/jimsafley/omeka-client-py)
+documents, using the Omeka API and the Python client
+`omeka-client-py` by [Jim Safley](https://github.com/jimsafley/omeka-client-py)
 (included in this repo)
 
 Caleb McDaniel, <http://wcm1.web.rice.edu>
