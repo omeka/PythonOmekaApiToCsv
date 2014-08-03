@@ -12,7 +12,7 @@ Omeka 2.x API request, and then write to a CSV file. Intended for
 requests to items, collections, element sets, elements, files, & tags.
 '''
 
-endpoint = 'http://youromeka/omeka/api'
+endpoint = 'http://wcaleb.rice.edu/omeka/api'
 resource = 'items'
 
 def request(query={}):
@@ -34,7 +34,7 @@ def get_all_pages(pages):
     global data
     page = 1
     while page <= pages:
-        print 'Getting results page ' + str(page) + 'of ' + str(pages) + ' ...'
+        print 'Getting results page ' + str(page) + ' of ' + str(pages) + ' ...'
         response, content = request({'page': str(page)})
         data.extend(json.loads(content))
         page += 1
