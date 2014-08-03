@@ -1,13 +1,30 @@
 omekadd
 =======
 
-A script for adding new items to Omeka from the command line using simple YAML
-documents, using the Omeka API and Python
+This repo includes two Python scripts designed for use with the Omeka API. 
+One adds new items to Omeka from the command line using simple YAML documents.
+The other converts the content returned by GET API requests into a CSV file;
+it can be used as a sort of backup for Omeka metadata.
 
 Caleb McDaniel, <http://wcm1.web.rice.edu>
 
-Description
------------
+Installation
+============
+
+Make sure you have downloaded and installed Omeka 2.x so you can use the API features.
+
+Clone this repo:
+
+	git clone https://github.com/wcaleb/omekadd.git
+
+Both the `omekadd.py` and `omekacsv.py` scripts import the `OmekaClient` class
+from `omekaclient.py`, which is included in the repo. The development repo for
+the Omeka Client is maintained by [Jim
+Safley](https://github.com/jimsafley/omeka-client-py), who wrote the original
+client.
+
+`omekadd.py`
+============
 
 The [Omeka
 API](https://omeka.readthedocs.org/en/latest/Reference/api/index.html)
@@ -57,19 +74,8 @@ The script turns the YAML document into the JSON string and posts it to
 your Omeka database using the API endpoint specified at the top of the
 script.
 
-Installation
-------------
-
-Make sure you have downloaded and installed Omeka 2.1 so you can use the API features.
-
-Clone this repo:
-
-	git clone https://github.com/wcaleb/omekadd.git
-
-The `omekadd.py` script imports the `OmekaClient` class from `omekaclient.py`,
-which is included in the repo. The development repo for the Omeka Client is
-maintained by [Jim Safley](https://github.com/jimsafley/omeka-client-py), who
-wrote the original client.
+Usage
+-----
 
 Edit the first two lines of `omekadd.py` so that they contain your API
 endpoint and your API key. See the [Omeka
@@ -82,10 +88,7 @@ it executable, and then try posting the `sample.yml` to your database:
 	cd omekadd
 	./omekadd.py sample.yaml
 
-Read on to discover more features, like uploading files to attach to the item!
-
-Usage
------
+If it worked, read on to discover more features, like uploading files to attach to the item!
 
 In a text editor, type up your new item as a [YAML
 document](http://en.wikipedia.org/wiki/YAML). **The YAML document must
@@ -116,8 +119,7 @@ easiest way to do this is to use YAML's [literal
 blocks](http://en.wikipedia.org/wiki/YAML#Block_literals), as shown in
 the sample file.
 
-Options
--------
+### Options
 
 By default, `omekadd` creates an item that is a private, non-featured
 Document without a collection. But you can change these defaults using
@@ -131,8 +133,7 @@ the command-line arguments:
       -t TYPE, --type TYPE  Specify item type using Omeka id; default is 1, for
                             "Document"
 
-Markdown Functionality
-----------------------
+### Markdown Functionality
 
 If you have the Python markdown module, you can also use Markdown in
 your YAML. To do this, first install the module:
@@ -148,8 +149,7 @@ change the prefix mark on the commandline by using the `--mdmark` option.
 in `<p>` and `</p>` tags. That's a feature of Markdown, but it may clutter your
 item metadata with unwanted tags.
 
-File Uploading
---------------
+### File Uploading
 
 You can also upload a file to attach to your new item using this script.
 Just use the argument `-u, --upload` at the command line, followed by the
@@ -157,11 +157,34 @@ properly escaped name of the file you want to upload. After creating your new
 Omeka item, the script will get the new item's ID and then upload the new file,
 associating it with the new item.
 
-Issues
-------
+`omekacsv.py`
+=============
 
-Right now this is just a barebones proof-of-concept script, so I'm certain
-there are bugs to be worked out. Please help test it and don't be shy about
-reporting issues or forking and improving it. I've mainly made the script to
+The second main script in the repo makes a GET requests to an
+Omeka API endpoint and resource and outputs a CSV file of the returned 
+data. 
+
+Before running it, edit the lines at the top of the script for your desired
+`endpoint` and `resource`. Then simply execute the script:
+
+	./omekacsv.py
+
+The script will print output to your terminal about its progress, and then
+create, in the same directory, an output CSV whose filename will begin with
+the resource you chose. You can open this CSV in Microsoft Excel for viewing
+and editing.
+
+By default, the outputted CSV will only create columns for which at least one
+row has data, and the file will not contain any empty cells. Instead, the
+string "None" is put in cells where there was no content returned by the Omeka
+request. If you wish to output empty cells in such cases, see the comment near
+the bottom of the script.
+
+Issues
+======
+
+Right now these scripts are mainly proofs-of-concept, so I'm certain
+there are bugs to be worked out. Please help test them and don't be shy about
+reporting issues or forking and improving. I've mainly made the scripts to
 help in my workflow, so I'm sure there are more pythonic ways to do this, and
 I'd be grateful for tips.
