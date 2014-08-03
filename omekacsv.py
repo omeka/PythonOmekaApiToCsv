@@ -80,3 +80,4 @@ for D in data:
     c.writerow({k:v.encode('utf-8', 'replace') for k,v in D.items() if isinstance(v, unicode)})
 
 o.close()
+print 'File created: ' + resource + '_output.csv'
