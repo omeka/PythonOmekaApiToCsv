@@ -12,7 +12,7 @@ Omeka 2.x API request, and then write to a CSV file. Intended for
 requests to items, collections, element sets, elements, files, & tags.
 '''
 
-endpoint = 'http://wcaleb.rice.edu/omeka/api'
+endpoint = 'http://youromeka/api'
 resource = 'items'
 
 def request(query={}):
