@@ -36,7 +36,7 @@ def get_all_pages(pages):
     page = 1
     while page <= pages:
         print 'Getting results page ' + str(page) + ' of ' + str(pages) + ' ...'
-        response, content = request({'page': str(page)})
+        response, content = request({'page': str(page), 'per_page': '50'})
         data.extend(json.loads(content))
         page += 1
         time.sleep(2)
