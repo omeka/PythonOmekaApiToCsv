@@ -160,7 +160,7 @@ associating it with the new item.
 `omekacsv.py`
 =============
 
-The second main script in the repo makes a GET requests to an
+The second main script in the repo makes a GET request to an
 Omeka API endpoint and resource and outputs a CSV file of the returned 
 data. 
 
