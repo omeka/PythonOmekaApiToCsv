@@ -13,10 +13,11 @@ requests to items, collections, element sets, elements, files, & tags.
 '''
 
 endpoint = 'http://youromeka/api'
+apikey = None
 resource = 'items'
 
 def request(query={}):
-    response, content = OmekaClient(endpoint).get(resource, None, query)
+    response, content = OmekaClient(endpoint, apikey).get(resource, None, query)
     if response.status != 200:
         print response.status, response.reason
         exit()
