@@ -6,7 +6,7 @@ This repo includes a Python script which allows users to generate CSV files of t
 Instructions
 ============
 
-Download the ZIP of the the script from above, or from [here](https://github.com/omeka/PythonOmekaApiToCsv.git)
+Download the ZIP of the the script from above, or from [here](https://github.com/omeka/PythonOmekaApiToCsv/archive/master.zip)
 
 (Alternatively, you can clone this repository.)
 
