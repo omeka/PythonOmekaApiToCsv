@@ -24,7 +24,7 @@ At this point, you are prompted to enter an Omeka API key. If you are using an A
 
 The script will now generate a series of CSV files for each of your resource types within the directory (/PythonOmekaApiToCsv)
 
-Attirbution
+Attribution
 ===========
 
 This script is based on the omekacsv.py which is mantained and was originally developed by Caleb McDaniel, <http://wcm1.web.rice.edu>. Original code can be found at https://github.com/wcaleb/omekadd
