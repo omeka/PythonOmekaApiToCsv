@@ -6,13 +6,13 @@ This repo includes a Python script which allows users to generate CSV files of t
 Instructions
 ============
 
-Download the ZIP of the the script from above, or from [here](NEWURL)
+Download the ZIP of the the script from above, or from [here](https://github.com/omeka/PythonOmekaApiToCsv.git)
 
 (Alternatively, you can clone this repository.)
 
 Unzip the package somewhere on your local computer.
 
-Open a command-line interface, and navigate to the newly created directory (/NEWNAME).
+Open a command-line interface, and navigate to the newly created directory (/PythonOmekaApiToCsv).
 
 Execute the script by entering the following command:
     
@@ -22,7 +22,7 @@ You will now be prompted to enter your Omeka API [endpoint](http://omeka.readthe
 
 At this point, you are prompted to enter an Omeka API key. If you are using an API key to export non-public material, enter it now. If all of your materials are public, or you only want materials that are public, you may skip this step.
 
-The script will now generate a series of CSV files for each of your resource types within the directory (NEWNAME)
+The script will now generate a series of CSV files for each of your resource types within the directory (/PythonOmekaApiToCsv)
 
 Attirbution
 ===========
