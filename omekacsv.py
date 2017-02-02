@@ -75,7 +75,7 @@ for resource in available_resources:
                 D[k] = v
         if 'page_blocks' in D:
                 text = [ d['text'] for d in D['page_blocks'] ]
-                D['Text'] = ' | '.join(text)
+                D['Text'] = ' | '.join(filter(None, text))
         for k, v in D.items():
             D[k] = unicodify(v)
             if D[k] and type(v) is dict:
