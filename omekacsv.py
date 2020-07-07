@@ -75,7 +75,6 @@ for resource in available_resources:
     # make initial API request; get max pages
     response, content = request()
     pages = int(math.ceil(float(response['omeka-total-results'])/50))
-    pages = 1
 
     # declare global variables; get all pages
     fields = []
