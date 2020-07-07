@@ -3,6 +3,7 @@
 from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
+from collections import defaultdict
 import csv
 import json
 import math
@@ -67,9 +68,12 @@ def get_all_pages(endpoint, resource, pages):
 endpoint = ''
 while not endpoint:
     endpoint = input('Enter your Omeka API endpoint\n')
-apikey = input('If you are using an API key, please enter it now. Otherwise press Enter.\n')
+apikey = input('\nIf you are using an API key, please enter it now. Otherwise press Enter.\n')
 if not apikey:
     apikey = None
+multivalue_separator = input('\nEnter a character to separate mutiple values within a single cell.\nThis character must not be used anywhere in your actual data.\nLeave blank to use the default separator: |\n')
+if not multivalue_separator:
+    multivalue_separator = '|'
 
 # get list of supported resources by this site
 response, content = request(endpoint, 'resources')
@@ -100,11 +104,14 @@ for resource in resources:
                 tags = [ tag['name'] for tag in v ]
                 csv_row['tags'] = ','.join(tags)
             elif k == 'element_texts':
+                texts_by_element = defaultdict(list)
                 for element_text in v:
-                    csv_row[element_text['element']['name']] = element_text['text']
+                    texts_by_element[element_text['element']['name']].append(element_text['text'])
+                for element_name, texts in texts_by_element.items():
+                    csv_row[element_name] = multivalue_separator.join(texts)
             elif k == 'page_blocks':
                 text = [ block['text'] for block in v ]
-                csv_row['Text'] = ' | '.join(filter(None, text))
+                csv_row['Text'] = multivalue_separator.join(filter(None, text))
             elif k == 'owner':
                 if (v):
                     csv_row['owner_id'] = unicodify(v['id'])
