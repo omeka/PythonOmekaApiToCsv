@@ -61,7 +61,7 @@ def get_all_pages(endpoint, resource, pages):
         response, content = request(endpoint, resource, {'page': str(page), 'per_page': '50'})
         data.extend(json.loads(content))
         page += 1
-        time.sleep(2)
+        time.sleep(1)
     return data
 
 endpoint = ''
