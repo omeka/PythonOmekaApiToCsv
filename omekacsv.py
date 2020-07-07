@@ -37,6 +37,33 @@ except NameError:
     unicode = str
     py2 = False
 
+def request(endpoint, resource, query={}):
+    url = endpoint + "/" + resource
+    if apikey is not None:
+        query["key"] = apikey
+    url += "?" + urlencode(query)
+
+    response = urlopen(url)
+    return response.info(), response.read()
+
+def unicodify(v):
+    if type(v) is list or type(v) is dict:
+        return None
+    if type(v) is bool or type(v) is int:
+       return unicode(v)
+    return v
+
+def get_all_pages(endpoint, resource, pages):
+    data = []
+    page = 1
+    while page <= pages:
+        print('Getting results page ' + str(page) + ' of ' + str(pages) + ' ...')
+        response, content = request(endpoint, resource, {'page': str(page), 'per_page': '50'})
+        data.extend(json.loads(content))
+        page += 1
+        time.sleep(2)
+    return data
+
 endpoint = ''
 while not endpoint:
     endpoint = input('Enter your Omeka API endpoint\n')
@@ -44,42 +71,25 @@ apikey = input('If you are using an API key, please enter it now. Otherwise pres
 if not apikey:
     apikey = None
 
-available_resources = ['items', 'files', 'elements', 'element_sets', 'tags', 'exhibits', 'exhibit_pages']
-for resource in available_resources:
+# get list of supported resources by this site
+response, content = request(endpoint, 'resources')
+available_resources = json.loads(content)
+
+resources = ['items', 'files', 'elements', 'element_sets', 'tags', 'exhibits', 'exhibit_pages']
+for resource in resources:
+    if (resource not in available_resources):
+        continue
+
     print('Exporting ' + resource)
-    def request(query={}):
-        url = endpoint + "/" + resource
-        if apikey is not None:
-            query["key"] = apikey
-        url += "?" + urlencode(query)
-
-        response = urlopen(url)
-        return response.info(), response.read()
-    def unicodify(v):
-        if type(v) is list or type(v) is dict:
-            return None
-        if type(v) is bool or type(v) is int:
-           return unicode(v)
-        return v
-
-    def get_all_pages(pages):
-        global data
-        page = 1
-        while page <= pages:
-            print('Getting results page ' + str(page) + ' of ' + str(pages) + ' ...')
-            response, content = request({'page': str(page), 'per_page': '50'})
-            data.extend(json.loads(content))
-            page += 1
-            time.sleep(2)
 
     # make initial API request; get max pages
-    response, content = request()
+    response, content = request(endpoint, resource)
     pages = int(math.ceil(float(response['omeka-total-results'])/50))
 
-    # declare global variables; get all pages
+    # get all pages
+    data = get_all_pages(endpoint, resource, pages)
+
     fields = []
-    data = []
-    get_all_pages(pages)
     csv_rows = []
 
     for D in data:
