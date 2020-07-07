@@ -106,7 +106,8 @@ for resource in resources:
                 text = [ block['text'] for block in v ]
                 csv_row['Text'] = ' | '.join(filter(None, text))
             elif k == 'owner':
-                csv_row['owner_id'] = unicodify(v['id'])
+                if (v):
+                    csv_row['owner_id'] = unicodify(v['id'])
             elif type(v) is dict:
                 for subkey, subvalue in v.items():
                     subvalue_string = unicodify(subvalue)
