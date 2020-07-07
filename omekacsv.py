@@ -130,15 +130,16 @@ for resource in resources:
             if k not in fields: fields.append(k)
         csv_rows.append(csv_row)
 
+    fields = sorted(fields, key=lambda field: (field != 'id', field))
     if (py2):
         o = open(resource + '_output.csv', 'w')
-        c = csv.DictWriter(o, [f.encode('utf-8', 'replace') for f in sorted(fields)], extrasaction='ignore') 
+        c = csv.DictWriter(o, [f.encode('utf-8', 'replace') for f in fields], extrasaction='ignore')
         c.writeheader()
         for row in csv_rows:
             c.writerow({k:v.encode('utf-8', 'replace') for k,v in row.items() if isinstance(v, unicode)})
     else:
         o = open(resource + '_output.csv', 'w', encoding = 'utf-8')
-        c = csv.DictWriter(o, sorted(fields), extrasaction='ignore')
+        c = csv.DictWriter(o, fields, extrasaction='ignore')
         c.writeheader()
         for row in csv_rows:
             c.writerow(row)
