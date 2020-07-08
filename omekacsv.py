@@ -113,11 +113,10 @@ for resource in resources:
             elif k == 'page_blocks':
                 text = [ block['text'] for block in v ]
                 csv_row['Text'] = multivalue_separator.join(filter(None, text))
-            elif k == 'owner':
-                if (v):
-                    csv_row['owner_id'] = unicodify(v['id'])
             elif type(v) is dict:
                 for subkey, subvalue in v.items():
+                    if (subkey == 'url' or subkey == 'resource'):
+                        continue
                     subvalue_string = unicodify(subvalue)
                     if subvalue_string is not None:
                         csv_row[k + '_' + subkey] = subvalue_string
