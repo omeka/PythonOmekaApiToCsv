@@ -106,9 +106,10 @@ for resource in resources:
             elif k == 'element_texts':
                 texts_by_element = defaultdict(list)
                 for element_text in v:
-                    texts_by_element[element_text['element']['name']].append(element_text['text'])
-                for element_name, texts in texts_by_element.items():
-                    csv_row[element_name] = multivalue_separator.join(texts)
+                    element_header = element_text['element_set']['name'] + ':' + element_text['element']['name']
+                    texts_by_element[element_header].append(element_text['text'])
+                for element_header, texts in texts_by_element.items():
+                    csv_row[element_header] = multivalue_separator.join(texts)
             elif k == 'page_blocks':
                 text = [ block['text'] for block in v ]
                 csv_row['Text'] = multivalue_separator.join(filter(None, text))
