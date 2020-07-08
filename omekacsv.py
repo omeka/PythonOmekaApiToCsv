@@ -50,7 +50,7 @@ def request(endpoint, resource, query={}):
 def unicodify(v):
     if type(v) is list or type(v) is dict:
         return None
-    if type(v) is bool or type(v) is int:
+    if type(v) is bool or type(v) is int or type(v) is float:
        return unicode(v)
     return v
 
@@ -79,7 +79,7 @@ if not multivalue_separator:
 response, content = request(endpoint, 'resources')
 available_resources = json.loads(content)
 
-resources = ['items', 'files', 'elements', 'element_sets', 'tags', 'exhibits', 'exhibit_pages']
+resources = ['items', 'files', 'elements', 'element_sets', 'tags', 'exhibits', 'exhibit_pages', 'geolocations']
 for resource in resources:
     if (resource not in available_resources):
         continue
