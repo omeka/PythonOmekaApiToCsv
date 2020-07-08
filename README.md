@@ -22,13 +22,11 @@ You will now be prompted to enter your Omeka API [endpoint](http://omeka.readthe
 
 At this point, you are prompted to enter an Omeka API key. If you are using an API key to export non-public material, enter it now. If all of your materials are public, or you only want materials that are public, you may skip this step.
 
-The script will now generate a series of CSV files for each of your resource types within the directory (/PythonOmekaApiToCsv)
+You will also be prompted to choose a character to use as a separator when multiple values appear in a single cell (for example, when there is more than one text entered for the same element for an item). This character should be one that doesn't appear anywhere in the actual data being exported. By default, the script will use the | ("pipe") character.
+
+The script will now generate a series of CSV files for each of your resource types within the current directory.
 
 Attribution
 ===========
 
-This script is based on the omekacsv.py which is mantained and was originally developed by Caleb McDaniel, <http://wcm1.web.rice.edu>. Original code can be found at https://github.com/wcaleb/omekadd
-
-This script, as with Caleb's, imports the `OmekaClient` class
-from `omekaclient.py`, which is included in the repo. The development repo for
-the Omeka Client is maintained by [Jim Safley](https://github.com/jimsafley/omeka-client-py), who wrote the original client.
+This script is based on omekacsv.py, originally developed by Caleb McDaniel, <http://wcm1.web.rice.edu>. Original code can be found at https://github.com/wcaleb/omekadd
