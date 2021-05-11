@@ -8,7 +8,10 @@ import csv
 import json
 import math
 import time
-import readline
+try:
+    import readline
+except ImportError:
+    pass
 
 try:
     from urllib.parse import urlencode
