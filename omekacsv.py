@@ -135,13 +135,13 @@ for resource in resources:
 
     fields = sorted(fields, key=lambda field: (field != 'id', field))
     if (py2):
-        o = open(resource + '_output.csv', 'w')
+        o = open(resource + '_output.csv', 'wb')
         c = csv.DictWriter(o, [f.encode('utf-8', 'replace') for f in fields], extrasaction='ignore')
         c.writeheader()
         for row in csv_rows:
             c.writerow({k:v.encode('utf-8', 'replace') for k,v in row.items() if isinstance(v, unicode)})
     else:
-        o = open(resource + '_output.csv', 'w', encoding = 'utf-8')
+        o = open(resource + '_output.csv', 'w', encoding='utf-8', newline='')
         c = csv.DictWriter(o, fields, extrasaction='ignore')
         c.writeheader()
         for row in csv_rows:
