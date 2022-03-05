@@ -1,6 +1,7 @@
 #! /usr/bin/python
 
 from __future__ import absolute_import
+from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 from collections import defaultdict
@@ -57,13 +58,30 @@ def unicodify(v):
        return unicode(v)
     return v
 
-def get_all_pages(endpoint, resource, pages):
+def get_all_pages(endpoint, resource):
     data = []
     page = 1
+    # default pages to 1 before we see the omeka-total-results header
+    pages = 1
     while page <= pages:
-        print('Getting results page ' + str(page) + ' of ' + str(pages) + ' ...')
-        response, content = request(endpoint, resource, {'page': str(page), 'per_page': '50'})
-        data.extend(json.loads(content))
+        response, content = request(endpoint, resource, {'page': str(page)})
+        content_list = json.loads(content)
+        data.extend(content_list)
+
+        # use first page to determine site's per_page setting
+        if (page == 1):
+            total = int(response['omeka-total-results'])
+            page_length = len(content_list)
+            if (page_length < total):
+                pages = int(math.ceil(total/page_length))
+            total_text = '\tTotal results: ' + str(total)
+            if (pages > 1):
+                total_text += ' (across ' + str(pages) + ' pages)'
+            print(total_text)
+
+        if (pages > 1):
+            print('\tGot results page ' + str(page))
+
         page += 1
         time.sleep(1)
     return data
@@ -87,14 +105,10 @@ for resource in resources:
     if (resource not in available_resources):
         continue
 
-    print('Exporting ' + resource)
-
-    # make initial API request; get max pages
-    response, content = request(endpoint, resource)
-    pages = int(math.ceil(float(response['omeka-total-results'])/50))
+    print('\nExporting ' + resource)
 
     # get all pages
-    data = get_all_pages(endpoint, resource, pages)
+    data = get_all_pages(endpoint, resource)
 
     fields = []
     csv_rows = []
