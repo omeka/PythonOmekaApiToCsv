@@ -89,6 +89,7 @@ def get_all_pages(endpoint, resource):
 endpoint = ''
 while not endpoint:
     endpoint = input('Enter your Omeka API endpoint\n')
+endpoint = endpoint.strip().rstrip('/');
 apikey = input('\nIf you are using an API key, please enter it now. Otherwise press Enter.\n')
 if not apikey:
     apikey = None
