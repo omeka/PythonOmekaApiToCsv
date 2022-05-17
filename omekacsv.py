@@ -124,6 +124,8 @@ for resource in resources:
             elif k == 'element_texts':
                 texts_by_element = defaultdict(list)
                 for element_text in v:
+                    if (element_text['text'] is None):
+                        continue
                     element_header = element_text['element_set']['name'] + ':' + element_text['element']['name']
                     texts_by_element[element_header].append(element_text['text'])
                 for element_header, texts in texts_by_element.items():
