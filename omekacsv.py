@@ -101,7 +101,7 @@ if not multivalue_separator:
 response, content = request(endpoint, 'resources')
 available_resources = json.loads(content)
 
-resources = ['items', 'files', 'elements', 'element_sets', 'tags', 'exhibits', 'exhibit_pages', 'geolocations']
+resources = ['items', 'files', 'collections', 'elements', 'element_sets', 'tags', 'exhibits', 'exhibit_pages', 'geolocations']
 for resource in resources:
     if (resource not in available_resources):
         continue
