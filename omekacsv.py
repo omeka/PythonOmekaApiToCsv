@@ -101,6 +101,19 @@ if not multivalue_separator:
 response, content = request(endpoint, 'resources')
 available_resources = json.loads(content)
 
+# pre-fetch files and build item_id -> file_ids lookup
+files_data_cache = None
+files_by_item_id = defaultdict(list)
+if 'files' in available_resources:
+    print('\nPre-loading files')
+    files_data_cache = get_all_pages(endpoint, 'files')
+    for file_record in files_data_cache:
+        item_obj = file_record.get('item')
+        if item_obj and item_obj.get('id') is not None:
+            file_urls = file_record.get('file_urls', {})
+            url = file_urls.get('original') or str(file_record['id'])
+            files_by_item_id[item_obj['id']].append(url)
+
 resources = ['items', 'files', 'collections', 'elements', 'element_sets', 'tags', 'exhibits', 'exhibit_pages', 'geolocations']
 for resource in resources:
     if (resource not in available_resources):
@@ -108,8 +121,11 @@ for resource in resources:
 
     print('\nExporting ' + resource)
 
-    # get all pages
-    data = get_all_pages(endpoint, resource)
+    # use cached files data to avoid a second API pass
+    if resource == 'files' and files_data_cache is not None:
+        data = files_data_cache
+    else:
+        data = get_all_pages(endpoint, resource)
 
     fields = []
     csv_rows = []
@@ -145,6 +161,11 @@ for resource in resources:
                 continue;
             else:
                 csv_row[k] = unicodify(v)
+
+        if resource == 'items':
+            item_id = D.get('id')
+            if item_id in files_by_item_id:
+                csv_row['file_urls'] = multivalue_separator.join(files_by_item_id[item_id])
 
         for k in csv_row.keys():
             if k not in fields: fields.append(k)
